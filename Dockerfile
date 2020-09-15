@@ -24,3 +24,7 @@ RUN tlmgr install collection-xetex
 # add ldap 
 RUN (cd /usr/lib/node_modules/npm; npm install ldapjs)
 
+# copy the LDAP Auth Manager from
+# https://github.com/worksasintended/overleaf_ldap
+COPY AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/AuthenticationManager.js
+
