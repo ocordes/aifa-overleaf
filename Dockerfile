@@ -22,7 +22,8 @@ RUN tlmgr install collection-publishers
 RUN tlmgr install collection-xetex
 
 # add ldap 
-RUN (cd /usr/lib/node_modules/npm; npm install ldapjs)
+#RUN (cd /usr/lib/node_modules/npm; npm install ldapjs)
+RUN npm install ldapjs
 
 # copy the LDAP Auth Manager from
 # https://github.com/worksasintended/overleaf_ldap
