@@ -85,7 +85,7 @@ const AuthenticationManager = {
     authUserObj(error, user, query, password, callback) {
         //non ldap / local admin user
         const adminMail = process.env.ADMIN_MAIL
-        const domain = process.env.DOMAIN
+        const domain = process.env.MAIL_DOMAIN
         if (error) {
             return callback(error)
         }
@@ -281,56 +281,83 @@ const AuthenticationManager = {
     },
 
     ldapAuth(query, passwd, onSuccess, callback, adminMail, userObj) {
+        //console.log('connect')
+        console.log(process.env.LDAP_SERVER)
         const client = ldap.createClient({
             url: process.env.LDAP_SERVER
         });
         const bindDn = process.env.LDAP_BIND_DN
         const bindPassword = process.env.LDAP_BIND_PW
-        client.bind(bindDn, bindPassword, function (err) {
-            if (err == null) {
-                const opts = {
-                    filter: '(&(objectClass=posixAccount)(uid=' + query.email.split('@')[0] + '))',
-                    scope: 'sub',
-                    attributes: ['dn']
-                };
+        const uid = process.env.LDAP_UID
+        const realm = process.env.LDAP_REALM
+        const domain = process.env.MAIL_DOMAIN
+        if (bindDn === undefined) {
+           logname = query.email.split('@')[0]
+	   userDn = uid+'='+logname+','+realm
+           //console.log(userDn)
+	   //console.log(logname+'@'+domain)
+           client.bind(userDn, passwd, function (err) {
+              //console.log('ldap connection initiated')
+              if (err == null) {
+                  //console.log("ldap positive")
+                  onSuccess(query, adminMail, userObj, callback)
+                  client.unbind()
+                  return null
+              } else {
+                  //console.log("ldap negative")
+                  client.unbind()
+                  return callback(null, null)
+              }
+           })
+        } else {
+           console.log(bindDn)
+           client.bind(bindDn, bindPassword, function (err) {
+                if (err == null) {
+                   const opts = {
+                       filter: '(&(objectClass=posixAccount)(uid=' + query.email.split('@')[0] + '))',
+                       scope: 'sub',
+                       attributes: ['dn']
+                   };
 
-                client.search('ou=Personen,dc=uni-greifswald,dc=de,dc=TLD', opts, function (err, res) {
-                    if (err) {
-                        return callback(null, null)
-                    }
-                    res.on('searchEntry', function (entry) {
-                        userDn = entry.objectName
-                        client.bind(userDn, passwd, function (err) {
-                            if (err == null) {
-                                //console.log("ldap positive")
-                                onSuccess(query, adminMail, userObj, callback)
-                                client.unbind()
-                                return null
-                            } else {
-                                //console.log("ldap negative")
-                                client.unbind()
-                                return callback(null, null)
-                            }
-                        })
-                    })
-                    res.on('error', err => {
-                        console.error('error: ' + err.message);
-                        client.unbind()
-                        return callback(null, null)
-                    });
-                    res.on('end', result => {
-                        //if nothing written (user not found)
-                        if(result.connection._writableState.writing == false){
-                            client.unbind()
-                            return callback(null, null)
-                        }
-                    });
-                });
+		   const searchDn = process.env.LDAP_SEARCHDN
+                   client.search(searchDn, opts, function (err, res) {
+                       if (err) {
+                           return callback(null, null)
+                       }
+                       res.on('searchEntry', function (entry) {
+                           userDn = entry.objectName
+                           client.bind(userDn, passwd, function (err) {
+                               if (err == null) {
+                                   //console.log("ldap positive")
+                                   onSuccess(query, adminMail, userObj, callback)
+                                   client.unbind()
+                                   return null
+                               } else {
+                                   //console.log("ldap negative")
+                                   client.unbind()
+                                   return callback(null, null)
+                               }
+                           })
+                       })
+                       res.on('error', err => {
+                           console.error('error: ' + err.message);
+                           client.unbind()
+                           return callback(null, null)
+                       });
+                       res.on('end', result => {
+                           //if nothing written (user not found)
+                           if(result.connection._writableState.writing == false){
+                               client.unbind()
+                               return callback(null, null)
+                           }
+                       });
+                   });
 
-            } else {
-                return callback(null, null)
-            }
-        })
+               } else {
+                   return callback(null, null)
+               }
+           })
+       }
     }
 }
 
