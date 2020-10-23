@@ -29,3 +29,5 @@ RUN npm install ldapjs
 # https://github.com/worksasintended/overleaf_ldap
 COPY AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/AuthenticationManager.js
 
+# locale corrections
+COP locales/de.json /var/www/sharelatex/web/node_modules/translations-sharelatex/locales/de.json
