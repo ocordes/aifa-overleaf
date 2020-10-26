@@ -2,6 +2,9 @@ FROM sharelatex/sharelatex:2.4.2
 
 LABEL maintainer=ocordes@astro.uni-bonn.de
 
+# update tlmgr
+RUN tlmgr update --self
+
 # install full latex
 #RUN tlmgr install scheme-full
 RUN tlmgr install collection-latex
