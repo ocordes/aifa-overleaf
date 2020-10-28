@@ -1,4 +1,5 @@
-FROM sharelatex/sharelatex:2.4.2
+#FROM sharelatex/sharelatex:2.4.2
+FROM aifajupyter/aifa-overleaf:test
 
 LABEL maintainer=ocordes@astro.uni-bonn.de
 
