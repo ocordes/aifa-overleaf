@@ -13,6 +13,12 @@ RUN tlmgr install collection-latex
 RUN tlmgr install collection-mathscience
 RUN tlmgr install collection-fontsrecommended
 RUN tlmgr install collection-langgerman
+RUN tlmgr install collection-langfrench
+RUN tlmgr install collection-langitalian
+RUN tlmgr install collection-langspanish
+RUN tlmgr install collection-langportuguese
+RUN tlmgr install collection-langgreek
+RUN tlmgr install collection-langpolish
 RUN tlmgr install collection-bibtexextra
 RUN tlmgr install collection-formatsextra
 RUN tlmgr install collection-fontsextra
