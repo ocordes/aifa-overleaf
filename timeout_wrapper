@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# written by: Oliver Cordes 2020-11-24
+# changed by: Oliver Cordes 2020-11-24
+
+# timeout wrapper for tex commands
+#
+# TIMEOUT sets the timeout for the command
+# the original command should be moved to
+# xxxx.orig and xxxx should be a link to
+# this wrapper script
+
+# determine the original executable
+ORIG_NAME=$(basename $0).orig
+
+# this timeout may be OK for small latex programs
+TIMEOUT=120
+
+# call the original command with timeout wrap 
+timeout ${TIMEOUT} ${ORIG_NAME} $*
+
+# handling of the result code
+res=$?
+
+# create an additional message for the timeout case
+if [ "${res}" == "124" ]; then
+  echo "Job killed because of timeout was reached!"
+fi
+
+exit ${res} 
+
+
