@@ -56,3 +56,6 @@ RUN mv xetex xetex.orig
 RUN ln -s timeout_wrapper xetex
 RUN mv luahbtex luahbtex.orig
 RUN ln -s timeout_wrapper luahbtex 
+
+# reset the workdir
+WORKDIR /
