@@ -44,18 +44,21 @@ COPY AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentic
 COPY locales/de.json /var/www/sharelatex/web/node_modules/translations-sharelatex/locales/de.json
 
 
-# install the wrapper
-COPY timeout_wrapper /usr/local/texlive/2020/bin/x86_64-linux/timeout_wrapper
-RUN chmod 755 /usr/local/texlive/2020/bin/x86_64-linux/timeout_wrapper
+## install the wrapper
+#COPY timeout_wrapper /usr/local/texlive/2020/bin/x86_64-linux/timeout_wrapper
+#RUN chmod 755 /usr/local/texlive/2020/bin/x86_64-linux/timeout_wrapper
+#
+## move the files away
+#WORKDIR /usr/local/texlive/2020/bin/x86_64-linux/
+#RUN mv pdftex pdftex.orig
+#RUN ln -s timeout_wrapper pdftex
+#RUN mv xetex xetex.orig
+#RUN ln -s timeout_wrapper xetex
+#RUN mv luahbtex luahbtex.orig
+#RUN ln -s timeout_wrapper luahbtex 
+#
+## reset the workdir
+#WORKDIR /
 
-# move the files away
-WORKDIR /usr/local/texlive/2020/bin/x86_64-linux/
-RUN mv pdftex pdftex.orig
-RUN ln -s timeout_wrapper pdftex
-RUN mv xetex xetex.orig
-RUN ln -s timeout_wrapper xetex
-RUN mv luahbtex luahbtex.orig
-RUN ln -s timeout_wrapper luahbtex 
-
-# reset the workdir
-WORKDIR /
+# adjust the latemk command with timeout option
+COPY latexmkrc /var/www/.latexmkrc
