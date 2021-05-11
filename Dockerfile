@@ -1,4 +1,5 @@
-FROM sharelatex/sharelatex:2.4.2
+FROM sharelatex/sharelatex:2.6.1
+#FROM sharelatex/sharelatex:2.4.2
 #FROM aifajupyter/aifa-overleaf:test
 #FROM aifajupyter/sharelatex:20201028-1
 
