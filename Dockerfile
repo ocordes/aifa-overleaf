@@ -42,7 +42,7 @@ RUN npm install ldapjs
 COPY AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/AuthenticationManager.js
 
 # locale corrections
-COPY locales/de.json /var/www/sharelatex/web/node_modules/translations-sharelatex/locales/de.json
+COPY locales/de.json /var/www/sharelatex/web/locales/de.json
 
 
 ## install the wrapper
