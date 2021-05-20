@@ -39,7 +39,10 @@ RUN npm install ldapjs
 
 # copy the LDAP Auth Manager from
 # https://github.com/worksasintended/overleaf_ldap
-COPY AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/AuthenticationManager.js
+COPY patches/AuthenticationManager.js /var/www/sharelatex/web/app/src/Features/Authentication/AuthenticationManager.js
+
+# copy the patched Language detection part 
+COPY patches/Translations.js /var/www/sharelatex/web/app/src/infrastructure/Translations.js
 
 # locale corrections
 COPY locales/de.json /var/www/sharelatex/web/locales/de.json
